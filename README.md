@@ -114,7 +114,7 @@ gunicorn main:app
 
 ## 📄 License
 
-This project is licensed for use in the TCET Webathon 2025. For external usage or contributions, please contact the team.
+This project is licensed for use in the TCET Webathon 2025. For external usage or contributions, please contact us.
 
 ---
 
