@@ -2,7 +2,7 @@
 
 # Project Link - https://focusframe-mhtj.onrender.com
 
-**FocusFrame** is a visually stunning, distraction-free timer app built for productivity, clarity, and elegance. Designed for the **ACM TCET Pixxel Web Webathon**, it combines modern web UI aesthetics with a lightweight Flask backend — all in a single, seamless deployment.
+**FocusFrame** is a visually stunning, distraction-free timer app built for productivity, clarity, and elegance. Designed for the **ACM TCET PixxelHack Webathon**, it combines modern web UI aesthetics with a lightweight Flask backend — all in a single, seamless deployment.
 
 ## 🌟 Features
 
@@ -117,6 +117,6 @@ This project is licensed for use in the TCET Webathon 2025. For external usage o
 
 ---
 
-> Designed with 💜 by Ameya Kulkarni and Dev Shah (IT B) for productivity, focus, minimalism (And for pixxelweb ofc ;) )
+> Designed with 💜 by Ameya Kulkarni and Dev Shah (IT B) for productivity, focus, minimalism (And for pixxelhack ofc ;) )
 
 
