@@ -1,1 +1,9 @@
-gunicorn app:app
+services:
+  - type: web
+    name: focusframe
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn main:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
