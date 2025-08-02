@@ -114,7 +114,3 @@ This project is licensed for use in the TCET Webathon 2025. For external usage o
 
 ```
 
----
-
-Let me know if you want this exported as a file or want to include screenshots, GitHub badge icons, or a live demo badge.
-```
