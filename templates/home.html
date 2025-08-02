@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFrame - Focus Timer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="page-enter">
+    <!-- Particles Background -->
+    <div id="particles-container"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <h1 class="brand">FocusFrame</h1>
+        <nav class="nav">
+            <button class="nav-btn" onclick="showTeam()">Our Team</button>
+            <button class="nav-btn" onclick="navigateToStats()">Stats</button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h2 class="hero-title">Choose Your Focus Duration</h2>
+            <p class="hero-subtitle">Select a preset time or create your own custom session</p>
+        </section>
+
+        <!-- Timer Cards -->
+        <section class="timer-cards">
+            <div class="card timer-card" onclick="startTimer(25)">
+                <div class="card-icon">🍅</div>
+                <h3 class="card-title">Pomodoro</h3>
+                <p class="card-duration">25 minutes</p>
+                <p class="card-description">Perfect for focused work sessions</p>
+            </div>
+            
+            <div class="card timer-card" onclick="startTimer(50)">
+                <div class="card-icon">⚡</div>
+                <h3 class="card-title">Deep Focus</h3>
+                <p class="card-duration">50 minutes</p>
+                <p class="card-description">Extended concentration period</p>
+            </div>
+            
+            <div class="card timer-card" onclick="startTimer(90)">
+                <div class="card-icon">🚀</div>
+                <h3 class="card-title">Ultra Focus</h3>
+                <p class="card-duration">90 minutes</p>
+                <p class="card-description">Maximum productivity session</p>
+            </div>
+        </section>
+
+        <!-- Custom Timer Input -->
+        <section class="custom-timer">
+            <h3 class="custom-title">Custom Duration</h3>
+            <div class="input-group">
+                <input type="number" id="customMinutes" min="1" max="300" placeholder="Enter minutes" class="custom-input">
+                <button onclick="startCustomTimer()" class="start-btn">Start Custom</button>
+            </div>
+        </section>
+
+        <!-- Motivational Quotes (Typing Animation) -->
+        <section class="quotes-section">
+            <div class="typing-text" id="typingQuotes"></div>
+        </section>
+    </main>
+
+    <!-- Team Modal -->
+<!-- Team Modal -->
+<div id="teamModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="hideTeam()">&times;</span>
+        <h3>Our Team</h3>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="member-avatar">👨‍💻</div>
+                <h4>Ameya Kulkarni</h4>
+                <p>IT B</p>
+            </div>
+            <div class="team-member">
+                <div class="member-avatar">👨‍💻</div>
+                <h4>Dev Shah</h4>
+                <p>IT B</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Main JS -->
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    
+    <!-- Home-specific scripts -->
+    <script>
+        // Initialize page
+        window.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            startTypingAnimation();
+            
+            // Page enter animation
+            setTimeout(() => {
+                document.body.classList.remove('page-enter');
+            }, 100);
+        });
+
+        // Timer functions
+        function startTimer(minutes) {
+            navigateWithTransition(`/start/${minutes}`);
+        }
+
+        function startCustomTimer() {
+            const minutes = parseInt(document.getElementById('customMinutes').value);
+            if (minutes && minutes > 0 && minutes <= 300) {
+                navigateWithTransition(`/start/${minutes}`);
+            } else {
+                alert('Please enter a valid number of minutes (1-300)');
+            }
+        }
+
+        // Team modal functions
+        function showTeam() {
+            document.getElementById('teamModal').style.display = 'block';
+        }
+
+        function hideTeam() {
+            document.getElementById('teamModal').style.display = 'none';
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('teamModal');
+            if (event.target === modal) {
+                hideTeam();
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hideTeam();
+            }
+        });
+    </script>
+</body>
+</html>

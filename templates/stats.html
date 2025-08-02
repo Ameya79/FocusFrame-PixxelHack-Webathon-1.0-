@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFrame - Statistics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="stats-page page-enter">
+    <!-- Particles Background -->
+    <div id="particles-container"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <h1 class="brand" onclick="navigateToHome()">FocusFrame</h1>
+        <nav class="nav">
+            <button class="nav-btn" onclick="navigateToHome()">New Session</button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="stats-main">
+        <!-- Stats Header -->
+        <section class="stats-header">
+            <h2 class="stats-title">Your Focus Journey</h2>
+            <p class="stats-subtitle">Track your progress and celebrate your achievements</p>
+        </section>
+
+        <!-- Stats Cards -->
+        <section class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-content">
+                    <h3 class="stat-number">{{ total_sessions }}</h3>
+                    <p class="stat-label">Total Sessions</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-content">
+                    <h3 class="stat-number">{{ total_hours }}h {{ total_minutes }}m</h3>
+                    <p class="stat-label">Total Focus Time</p>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-content">
+                    <h3 class="stat-number">{% if total_sessions > 0 %}{{ (total_hours * 60 + total_minutes) // total_sessions }}{% else %}0{% endif %}m</h3>
+                    <p class="stat-label">Average Session</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session History -->
+        <section class="session-history">
+            <div class="history-header">
+                <div class="history-title-row">
+                    <h3 class="history-title">Recent Sessions</h3>
+                    {% if sessions %}
+                    <button onclick="clearAllSessions()" class="clear-btn">Clear All Sessions</button>
+                    {% endif %}
+                </div>
+                {% if sessions %}
+                <p class="history-subtitle">{{ sessions|length }} session{% if sessions|length != 1 %}s{% endif %} completed</p>
+                {% endif %}
+            </div>
+            
+            {% if sessions %}
+            <div class="sessions-list">
+                {% for session in sessions %}
+                <div class="session-item">
+                    <div class="session-info">
+                        <div class="session-duration">
+                            <span class="duration-number">{{ session.duration }}</span>
+                            <span class="duration-unit">min</span>
+                        </div>
+                        <div class="session-details">
+                            <div class="session-date">{{ session.date }}</div>
+                            {% if session.notes %}
+                            <div class="session-notes">{{ session.notes }}</div>
+                            {% else %}
+                            <div class="session-notes no-notes">No notes added</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="session-badge">
+                        {% if session.duration >= 90 %}
+                        <span class="badge ultra">Ultra Focus</span>
+                        {% elif session.duration >= 50 %}
+                        <span class="badge deep">Deep Focus</span>
+                        {% elif session.duration >= 20 %}
+                        <span class="badge pomodoro">Pomodoro</span>
+                        {% else %}
+                        <span class="badge custom">Quick Focus</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🚀</div>
+                <h4 class="empty-title">No sessions yet</h4>
+                <p class="empty-text">Start your first focus session to see your statistics here.</p>
+                <button onclick="navigateToHome()" class="start-first-btn">Start Your First Session</button>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Achievements Section -->
+        {% if total_sessions > 0 %}
+        <section class="achievements">
+            <h3 class="achievements-title">Achievements</h3>
+            <div class="achievement-grid">
+                {% if total_sessions >= 1 %}
+                <div class="achievement earned">
+                    <div class="achievement-icon">🎯</div>
+                    <div class="achievement-name">First Focus</div>
+                    <div class="achievement-desc">Complete your first session</div>
+                </div>
+                {% endif %}
+                
+                {% if total_sessions >= 5 %}
+                <div class="achievement earned">
+                    <div class="achievement-icon">🔥</div>
+                    <div class="achievement-name">Consistency</div>
+                    <div class="achievement-desc">Complete 5 sessions</div>
+                </div>
+                {% else %}
+                <div class="achievement locked">
+                    <div class="achievement-icon">🔒</div>
+                    <div class="achievement-name">Consistency</div>
+                    <div class="achievement-desc">Complete 5 sessions</div>
+                </div>
+                {% endif %}
+                
+                {% if (total_hours * 60 + total_minutes) >= 300 %}
+                <div class="achievement earned">
+                    <div class="achievement-icon">⏰</div>
+                    <div class="achievement-name">Time Master</div>
+                    <div class="achievement-desc">Focus for 5+ hours total</div>
+                </div>
+                {% else %}
+                <div class="achievement locked">
+                    <div class="achievement-icon">🔒</div>
+                    <div class="achievement-name">Time Master</div>
+                    <div class="achievement-desc">Focus for 5+ hours total</div>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+        {% endif %}
+    </main>
+
+    <!-- Confirmation Modal for Clear Sessions -->
+    <div id="clearModal" class="modal">
+        <div class="modal-content">
+            <h3>⚠️ Clear All Sessions?</h3>
+            <p>This action will permanently delete all your focus sessions and statistics. This cannot be undone.</p>
+            <div class="modal-actions">
+                <button onclick="confirmClearSessions()" class="control-btn danger">Yes, Clear All</button>
+                <button onclick="hideClearModal()" class="control-btn outline">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JS -->
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    
+    <!-- Stats-specific scripts -->
+    <script>
+        // Initialize page
+        window.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            
+            // Page enter animation
+            setTimeout(() => {
+                document.body.classList.remove('page-enter');
+            }, 100);
+            
+            // Stagger animation for stat cards
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+            
+            // Stagger animation for session items
+            const sessionItems = document.querySelectorAll('.session-item');
+            sessionItems.forEach((item, index) => {
+                item.style.animationDelay = `${0.3 + index * 0.05}s`;
+            });
+        });
+
+        // Clear sessions functionality
+        function clearAllSessions() {
+            document.getElementById('clearModal').style.display = 'block';
+        }
+
+        function hideClearModal() {
+            document.getElementById('clearModal').style.display = 'none';
+        }
+
+        async function confirmClearSessions() {
+            try {
+                const response = await fetch('/clear-sessions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Show success message and reload page
+                    showNotification('Success', 'All sessions cleared successfully!', 'success');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showNotification('Error', 'Failed to clear sessions: ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Clear error:', error);
+                showNotification('Error', 'Failed to clear sessions. Please try again.', 'error');
+            }
+            
+            hideClearModal();
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('clearModal');
+            if (event.target === modal) {
+                hideClearModal();
+            }
+        }
+
+        // Simple notification function for this page
+        function showNotification(title, message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <h4>${title}</h4>
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            Object.assign(notification.style, {
+                position: 'fixed',
+                top: '20px',
+                right: '20px',
+                background: type === 'success' ? 'rgba(16, 185, 129, 0.9)' : 
+                           type === 'error' ? 'rgba(239, 68, 68, 0.9)' : 
+                           'rgba(59, 130, 246, 0.9)',
+                color: '#ffffff',
+                padding: '15px 20px',
+                borderRadius: '10px',
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
+                zIndex: '10000',
+                maxWidth: '300px',
+                transform: 'translateX(100%)',
+                transition: 'transform 0.3s ease',
+                backdropFilter: 'blur(10px)'
+            });
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

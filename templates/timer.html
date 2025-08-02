@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusFrame - Timer ({{ minutes }}min)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="timer-page page-enter">
+    <!-- Particles Background -->
+    <div id="particles-container"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <h1 class="brand" onclick="navigateToHome()">FocusFrame</h1>
+        <div class="timer-info">
+            <span class="session-type">{{ minutes }}-minute session</span>
+        </div>
+    </header>
+
+    <!-- Main Timer Content -->
+    <main class="timer-main" data-minutes="{{ minutes }}">
+        <!-- Circular Progress Ring -->
+        <div class="timer-container">
+            <svg class="progress-ring" width="320" height="320">
+                <!-- Background circle -->
+                <circle cx="160" cy="160" r="140" 
+                        fill="none" 
+                        stroke="rgba(255,255,255,0.1)" 
+                        stroke-width="8"/>
+                
+                <!-- Progress circle -->
+                <circle id="progress-circle" 
+                        cx="160" cy="160" r="140" 
+                        fill="none" 
+                        stroke="url(#gradient)" 
+                        stroke-width="8" 
+                        stroke-linecap="round"
+                        stroke-dasharray="879.646" 
+                        stroke-dashoffset="879.646"
+                        transform="rotate(-90 160 160)"/>
+                
+                <!-- Gradient definition -->
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            
+            <!-- Timer Display -->
+            <div class="timer-display">
+                <div class="time-text" id="timeDisplay">{{ minutes }}:00</div>
+                <div class="time-label" id="timeLabel">Focus Time</div>
+            </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="timer-controls">
+            <button id="pauseBtn" class="control-btn primary" onclick="togglePause()">
+                <span id="pauseText">Pause</span>
+            </button>
+            <button id="endBtn" class="control-btn secondary" onclick="endSession()">
+                End Session
+            </button>
+        </div>
+
+        <!-- Session Complete Modal -->
+        <div id="sessionModal" class="modal session-modal">
+            <div class="modal-content">
+                <h3 id="sessionTitle">Session Complete!</h3>
+                <p id="sessionSummary">You focused for <span id="completedTime">0</span> minutes.</p>
+                
+                <!-- Notes Section -->
+                <div class="notes-section">
+                    <label for="sessionNotes">Session Notes (optional):</label>
+                    <textarea id="sessionNotes" 
+                              placeholder="How did this session go? Any insights or reflections..."
+                              rows="4"></textarea>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="modal-actions">
+                    <button onclick="saveSession()" class="control-btn primary">Save Session</button>
+                    <button onclick="skipSave()" class="control-btn outline">Skip & Continue</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Main JS -->
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    
+    <!-- Timer-specific scripts -->
+    <script>
+        // Get minutes from data attribute to avoid template issues
+        const TIMER_MINUTES = parseInt(document.querySelector('[data-minutes]')?.getAttribute('data-minutes') || '{{ minutes }}');
+        
+        // Timer state
+        let totalSeconds = TIMER_MINUTES * 60;
+        let remainingSeconds = totalSeconds;
+        let timerInterval = null;
+        let isPaused = false;
+        let isComplete = false;
+
+        // Initialize timer
+        window.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            startTimer();
+            
+            // Page enter animation
+            setTimeout(() => {
+                document.body.classList.remove('page-enter');
+            }, 100);
+        });
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                if (!isPaused && remainingSeconds > 0) {
+                    remainingSeconds--;
+                    updateDisplay();
+                    updateProgress();
+                    
+                    if (remainingSeconds === 0) {
+                        completeSession();
+                    }
+                }
+            }, 1000);
+        }
+
+        function updateDisplay() {
+            const minutes = Math.floor(remainingSeconds / 60);
+            const seconds = remainingSeconds % 60;
+            const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timeDisplay').textContent = timeString;
+        }
+
+        function updateProgress() {
+            const progress = (totalSeconds - remainingSeconds) / totalSeconds;
+            const circumference = 879.646;
+            const offset = circumference - (progress * circumference);
+            document.getElementById('progress-circle').style.strokeDashoffset = offset;
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            const pauseBtn = document.getElementById('pauseBtn');
+            const pauseText = document.getElementById('pauseText');
+            const timeLabel = document.getElementById('timeLabel');
+            
+            if (isPaused) {
+                pauseText.textContent = 'Resume';
+                timeLabel.textContent = 'Paused';
+                pauseBtn.classList.add('resumed');
+            } else {
+                pauseText.textContent = 'Pause';
+                timeLabel.textContent = 'Focus Time';
+                pauseBtn.classList.remove('resumed');
+            }
+        }
+
+        function endSession() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            showSessionModal();
+        }
+
+        function completeSession() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            isComplete = true;
+            document.getElementById('timeLabel').textContent = 'Complete!';
+            showSessionModal();
+            
+            // Add completion celebration effect
+            document.querySelector('.timer-container').classList.add('complete');
+        }
+
+        function showSessionModal() {
+            const completedMinutes = Math.ceil((totalSeconds - remainingSeconds) / 60);
+            document.getElementById('completedTime').textContent = completedMinutes;
+            
+            if (isComplete) {
+                document.getElementById('sessionTitle').textContent = '🎉 Session Complete!';
+                document.getElementById('sessionSummary').innerHTML = 
+                    `Congratulations! You completed your ${TIMER_MINUTES}-minute focus session.`;
+            } else {
+                document.getElementById('sessionTitle').textContent = 'Session Ended';
+                document.getElementById('sessionSummary').innerHTML = 
+                    `You focused for ${completedMinutes} out of ${TIMER_MINUTES} minutes.`;
+            }
+            
+            document.getElementById('sessionModal').style.display = 'block';
+            document.getElementById('sessionNotes').focus();
+        }
+
+        async function saveSession() {
+            const completedMinutes = Math.ceil((totalSeconds - remainingSeconds) / 60);
+            const notes = document.getElementById('sessionNotes').value.trim();
+            
+            // Clear the beforeunload handler before saving
+            window.removeEventListener('beforeunload', beforeUnloadHandler);
+            
+            try {
+                const response = await fetch('/save-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        duration: completedMinutes,
+                        notes: notes
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    navigateToStats();
+                } else {
+                    alert('Error saving session: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('Error saving session. Please try again.');
+            }
+        }
+
+        function skipSave() {
+            // Clear the beforeunload handler before navigating
+            window.removeEventListener('beforeunload', beforeUnloadHandler);
+            navigateToHome();
+        }
+
+        // Separate beforeunload handler for easier removal
+        function beforeUnloadHandler(e) {
+            if (timerInterval && remainingSeconds > 0 && remainingSeconds < totalSeconds) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'p') {
+                e.preventDefault();
+                if (!document.getElementById('sessionModal').style.display || 
+                    document.getElementById('sessionModal').style.display === 'none') {
+                    togglePause();
+                }
+            } else if (e.key.toLowerCase() === 'e') {
+                e.preventDefault();
+                if (!document.getElementById('sessionModal').style.display || 
+                    document.getElementById('sessionModal').style.display === 'none') {
+                    endSession();
+                }
+            } else if (e.key.toLowerCase() === 's' && 
+                      document.getElementById('sessionModal').style.display === 'block') {
+                e.preventDefault();
+                saveSession();
+            } else if (e.key === 'Escape' && 
+                      document.getElementById('sessionModal').style.display === 'block') {
+                skipSave();
+            }
+        });
+
+        // Prevent accidental navigation
+        window.addEventListener('beforeunload', beforeUnloadHandler);
+    </script>
+</body>
+</html>
