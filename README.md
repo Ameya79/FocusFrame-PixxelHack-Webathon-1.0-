@@ -1,5 +1,7 @@
 # 🎯 FocusFrame — A Beautiful Focus Timer Web App
 
+# Project Link - https://focusframe-mhtj.onrender.com
+
 **FocusFrame** is a visually stunning, distraction-free timer app built for productivity, clarity, and elegance. Designed for the **TCET Webathon**, it combines modern web UI aesthetics with a lightweight Flask backend — all in a single, seamless deployment.
 
 ## 🌟 Features
@@ -55,20 +57,20 @@ pip install -r requirements.txt
 
 ### 3. Run the App
 
-```bash
+```
 python main.py
 ```
 
 Or with gunicorn:
 
-```bash
+```
 gunicorn main:app
 ```
 
 ### 4. Visit the App
 
 ```
-http://localhost:5000
+https://focusframe-mhtj.onrender.com
 ```
 
 ---
@@ -94,7 +96,11 @@ gunicorn main:app
 
 ## 📸 Screenshots
 
-> *(Include some screenshots of the homepage, timer view, modal, etc. if desired)*
+> <img width="1918" height="907" alt="image" src="https://github.com/user-attachments/assets/8707e147-6edd-42e5-8554-b7c45f964a40" />
+> <img width="1918" height="901" alt="image" src="https://github.com/user-attachments/assets/a95ebb79-eeaf-4737-8adb-8ea7fdac6e96" />
+><img width="1890" height="922" alt="image" src="https://github.com/user-attachments/assets/3e3523bf-2a23-4993-8042-a766ce168936" />
+
+
 
 ---
 
