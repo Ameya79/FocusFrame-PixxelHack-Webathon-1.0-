@@ -112,5 +112,4 @@ This project is licensed for use in the TCET Webathon 2025. For external usage o
 
 > Designed with 💜 by Ameya Kulkarni and Dev Shah (IT B) for productivity, focus, and minimalism (And for pixxelweb ofc ;) ).
 
-```
 
