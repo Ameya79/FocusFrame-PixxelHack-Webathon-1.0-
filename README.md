@@ -2,7 +2,7 @@
 
 # Project Link - https://focusframe-mhtj.onrender.com
 
-**FocusFrame** is a visually stunning, distraction-free timer app built for productivity, clarity, and elegance. Designed for the **TCET Webathon**, it combines modern web UI aesthetics with a lightweight Flask backend — all in a single, seamless deployment.
+**FocusFrame** is a visually stunning, distraction-free timer app built for productivity, clarity, and elegance. Designed for the **ACM TCET Pixxel Web Webathon**, it combines modern web UI aesthetics with a lightweight Flask backend — all in a single, seamless deployment.
 
 ## 🌟 Features
 
@@ -44,14 +44,15 @@ Both backend and frontend are combined and deployed via a single lightweight Fla
 ## 🚀 Running Locally
 
 ### 1. Clone the Repository
-```bash
+
+```
 git clone https://github.com/your-username/focusframe.git
 cd focusframe
 ````
 
 ### 2. Install Dependencies
 
-```bash
+```
 pip install -r requirements.txt
 ```
 
@@ -98,7 +99,8 @@ gunicorn main:app
 
 > <img width="1918" height="907" alt="image" src="https://github.com/user-attachments/assets/8707e147-6edd-42e5-8554-b7c45f964a40" />
 > <img width="1918" height="901" alt="image" src="https://github.com/user-attachments/assets/a95ebb79-eeaf-4737-8adb-8ea7fdac6e96" />
-><img width="1890" height="922" alt="image" src="https://github.com/user-attachments/assets/3e3523bf-2a23-4993-8042-a766ce168936" />
+> <img width="1890" height="922" alt="image" src="https://github.com/user-attachments/assets/3e3523bf-2a23-4993-8042-a766ce168936" />
+> <img width="1917" height="890" alt="image" src="https://github.com/user-attachments/assets/9400a494-817b-48a0-947e-a4cff14cb91a" />
 
 
 
