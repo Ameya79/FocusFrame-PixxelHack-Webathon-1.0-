@@ -1,7 +1,7 @@
 # 🎯 FocusFrame — A Beautiful Focus Timer Web App
 
 # Project Link - https://focusframe-mhtj.onrender.com
-- The Render App Wake Up may take some time please be patient :)
+- The App Wake Up may take some time please be patient :)
 
 **FocusFrame** is a visually stunning, distraction-free timer app built for productivity, clarity, and elegance. Designed for the **ACM TCET PixxelHack Webathon**, it combines modern web UI aesthetics with a lightweight Flask backend — all in a single, seamless deployment.
 
