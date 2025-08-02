@@ -30,6 +30,9 @@ Optimized for both desktop and mobile devices with fully responsive layout and c
 ✅ **Single Deployment**  
 Both backend and frontend are combined and deployed via a single lightweight Flask app — no separate deployment needed.
 
+✅ **Achievement System**  
+Added an achievement section which unlocks more achievements as the user increases focus
+
 ---
 
 ## 💻 Built With
@@ -101,6 +104,8 @@ gunicorn main:app
 > <img width="1918" height="901" alt="image" src="https://github.com/user-attachments/assets/a95ebb79-eeaf-4737-8adb-8ea7fdac6e96" />
 > <img width="1890" height="922" alt="image" src="https://github.com/user-attachments/assets/3e3523bf-2a23-4993-8042-a766ce168936" />
 > <img width="1917" height="890" alt="image" src="https://github.com/user-attachments/assets/9400a494-817b-48a0-947e-a4cff14cb91a" />
+> <img width="1505" height="621" alt="image" src="https://github.com/user-attachments/assets/0c19e122-52b7-4aaa-ba7d-3ad83f14fe18" />
+
 
 
 
@@ -112,6 +117,6 @@ This project is licensed for use in the TCET Webathon 2025. For external usage o
 
 ---
 
-> Designed with 💜 by Ameya Kulkarni and Dev Shah (IT B) for productivity, focus, and minimalism (And for pixxelweb ofc ;) ).
+> Designed with 💜 by Ameya Kulkarni and Dev Shah (IT B) for productivity, focus, minimalism (And for pixxelweb ofc ;) )
 
 
